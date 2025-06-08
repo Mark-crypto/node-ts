@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   getCar,
-  getCarHeaders,
   getCarPaginated,
   getCars,
   postCarsSimulation,
@@ -12,7 +11,7 @@ const router = Router();
 router.get("/cars", getCars);
 router.get("/cars/:id", getCar);
 router.get("/cars/filter", getCarPaginated);
-router.get("/cars/headers", getCarHeaders);
+// router.get("/cars/headers", getCarHeaders);
 router.post("/cars", postCarsSimulation);
 
 export default router;

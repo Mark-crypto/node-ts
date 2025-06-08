@@ -7,6 +7,7 @@ const connection = new Client({
   user: process.env.USER,
   database: process.env.DATABASE,
   port: process.env.PORT ? parseInt(process.env.PORT, 10) : 5432,
+  password: process.env.PASSWORD,
 });
 
 connection.connect().then(() => {

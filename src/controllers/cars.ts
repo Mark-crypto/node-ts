@@ -2,12 +2,10 @@ import { Request, Response } from "express";
 import connection from "../database";
 import { CreateCars } from "../types/CarTypes";
 
-export const getCars = async (req: Request, res: Response) => {
+export const getCars = async (req: Request, res: Response): Promise<void> => {
   try {
     const { rows } = await connection.query("SELECT * FROM cars");
-    return res
-      .status(200)
-      .json({ data: rows.length > 0 ? rows : [], success: true });
+    res.status(200).json({ data: rows.length > 0 ? rows : [], success: true });
   } catch (error) {
     console.log(error);
     res.status(400).json({
@@ -17,14 +15,14 @@ export const getCars = async (req: Request, res: Response) => {
   }
 };
 
-export const getCar = async (req: Request, res: Response) => {
-  const id = req.params;
+export const getCar = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
   try {
     const { rows } = await connection.query(
-      "SELECT * FROM cars WHERE car_id=?",
+      "SELECT * FROM cars WHERE car_id=$1",
       [id]
     );
-    return res
+    res
       .status(200)
       .json({ data: rows.length > 0 ? rows[0] : [], success: true });
   } catch (error) {
@@ -36,7 +34,10 @@ export const getCar = async (req: Request, res: Response) => {
   }
 };
 
-export const getCarPaginated = async (req: Request, res: Response) => {
+export const getCarPaginated = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
   const offset = (page - 1) * limit;
@@ -44,7 +45,7 @@ export const getCarPaginated = async (req: Request, res: Response) => {
   const offsetString = offset.toString();
   try {
     const { rows: paginatedRows } = await connection.query(
-      "SELECT * FROM cars LIMIT ? OFFSET ?",
+      "SELECT * FROM cars LIMIT $1 OFFSET $2",
       [limitString, offsetString]
     );
     const { rows: singleRow } = await connection.query(
@@ -52,7 +53,7 @@ export const getCarPaginated = async (req: Request, res: Response) => {
     );
 
     const total = singleRow[0]?.total || 0;
-    return res.status(200).json({
+    res.status(200).json({
       data: paginatedRows.length > 0 ? paginatedRows[0] : [],
       success: true,
       meta: { totalPages: Math.ceil(total / limit), page, limit, total },
