@@ -22,7 +22,7 @@ app.use(
     credentials: true,
   })
 );
-app.use("/api", indexRouter);
+app.use("/api/v1", indexRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is connected on ${PORT}`);
