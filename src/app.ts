@@ -25,5 +25,5 @@ app.use(
 app.use("/api/v1", indexRouter);
 
 app.listen(PORT, () => {
-  console.log(`Server is connected on ${PORT}`);
+  console.log(`Server is connected on port: ${PORT}`);
 });
